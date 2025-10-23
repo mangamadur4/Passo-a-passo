@@ -1,0 +1,59 @@
+name: Atualizar README com resultados
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v3
+
+      - name: Gerar conteúdo do README
+        id: gerar
+        run: |
+          echo "# Passo-a-passo" > README.md
+          echo "" >> README.md
+          echo "## Resultados automáticos dos Workflows" >> README.md
+          echo "" >> README.md
+
+          echo "### 🟢 Hello World" >> README.md
+          echo "\`\`\`" >> README.md
+          echo "Hello, world!" >> README.md
+          echo "\`\`\`" >> README.md
+          echo "" >> README.md
+
+          echo "### 🕒 Data e hora" >> README.md
+          echo "\`\`\`" >> README.md
+          date >> README.md
+          echo "\`\`\`" >> README.md
+          echo "" >> README.md
+
+          echo "### 👤 Usuário do Push" >> README.md
+          echo "\`\`\`" >> README.md
+          echo "${GITHUB_ACTOR}" >> README.md
+          echo "\`\`\`" >> README.md
+          echo "" >> README.md
+
+          echo "### ➕ Calcular 2 + 2" >> README.md
+          echo "\`\`\`" >> README.md
+          echo $((2 + 2)) >> README.md
+          echo "\`\`\`" >> README.md
+          echo "" >> README.md
+
+          echo "### 📁 Listar arquivos" >> README.md
+          echo "\`\`\`" >> README.md
+          ls -l >> README.md
+          echo "\`\`\`" >> README.md
+
+      - name: Commit e Push das alterações
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add README.md
+          git commit -m "Atualização automática do README com resultados" || echo "Nada para commitar"
+          git push
