@@ -1,0 +1,32 @@
+name: Contagem diária à meia-noite (UTC)
+on:
+schedule:
+- cron: '0 0 * * *'
+
+
+jobs:
+midnight-count:
+runs-on: ubuntu-latest
+steps:
+- name: Checkout
+uses: actions/checkout@v4
+
+
+- name: Contar arquivos e salvar em arquivo
+run: |
+total_files=$(find . -type f | wc -l)
+html_count=$(find . -type f -name '*.html' | wc -l)
+css_count=$(find . -type f -name '*.css' | wc -l)
+js_count=$(find . -type f -name '*.js' | wc -l)
+echo "Total files: $total_files" > daily-count-$(date -u +%Y%m%d).txt
+echo "HTML: $html_count" >> daily-count-$(date -u +%Y%m%d).txt
+echo "CSS: $css_count" >> daily-count-$(date -u +%Y%m%d).txt
+echo "JS: $js_count" >> daily-count-$(date -u +%Y%m%d).txt
+cat daily-count-$(date -u +%Y%m%d).txt
+
+
+- name: Upload artifact (opcional)
+uses: actions/upload-artifact@v4
+with:
+name: daily-count
+path: daily-count-*.txt
