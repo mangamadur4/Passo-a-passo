@@ -1,0 +1,44 @@
+name: Push Info (data, hora, usuário, listar arquivos, contar HTML)
+on:
+push:
+branches: [ main ]
+jobs:
+info:
+runs-on: ubuntu-latest
+steps:
+- name: Checkout
+uses: actions/checkout@v4
+
+
+- name: Mostrar data e hora do runner
+run: |
+echo "Runner date/time: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+
+
+- name: Mostrar data e hora do commit (HEAD)
+run: |
+echo "Commit timestamp: ${{ github.event.head_commit.timestamp }}"
+
+
+- name: Mostrar usuário que deu push
+run: |
+echo "Pusher: ${{ github.actor }}"
+
+
+- name: Calcular 2+2 em variável no terminal
+run: |
+result=$((2+2))
+echo "2 + 2 = $result"
+
+
+- name: Listar arquivos no repositório
+run: |
+git status --porcelain || true
+echo "--- Arquivos rastreados ---"
+git ls-files
+
+
+- name: Contar arquivos .html
+run: |
+count=$(find . -type f -name '*.html' | wc -l)
+echo "HTML files count: $count"
