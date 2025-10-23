@@ -1,0 +1,25 @@
+name: Agendamento - rodar apenas durante a noite (verificação no job)
+on:
+schedule:
+- cron: '0 * * * *'
+
+
+jobs:
+night-run:
+runs-on: ubuntu-latest
+steps:
+- name: Mostrar hora e checar se é noite
+run: |
+HOUR=$(date +"%H")
+echo "Hora local do runner: $HOUR"
+if [ "$HOUR" -ge 20 ] || [ "$HOUR" -le 5 ]; then
+echo "Estamos na faixa noturna; continuando..."
+else
+echo "Não é noite — saindo sem executar as ações.";
+exit 0
+fi
+
+
+- name: Fazer algo só de noite
+run: |
+echo "Ação noturna executada às $(date)"
