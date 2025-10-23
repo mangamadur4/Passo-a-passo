@@ -1,0 +1,25 @@
+name: Agendamento - rodar apenas aos sábados (check dentro do job)
+on:
+schedule:
+- cron: '0 9 * * *' 
+
+
+jobs:
+saturday-run:
+runs-on: ubuntu-latest
+steps:
+- name: Verificar dia da semana
+run: |
+DOW=$(date +"%u")
+echo "Dia da semana (1..7): $DOW"
+if [ "$DOW" -eq 6 ]; then
+echo "Hoje é sábado — rodando tarefas"
+else
+echo "Não é sábado — abortando"
+exit 0
+fi
+
+
+- name: Tarefa de sábado
+run: |
+echo "Executando tarefa agendada para sábado: $(date)"
