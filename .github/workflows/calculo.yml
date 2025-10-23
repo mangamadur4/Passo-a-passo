@@ -1,0 +1,14 @@
+name: Calcular 2 + 2
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  calculo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Calcular soma
+        run: |
+          resultado=$((2 + 2))
+          echo "O resultado de 2 + 2 é $resultado"

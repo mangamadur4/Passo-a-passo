@@ -1,35 +1,24 @@
 name: Criar README automático
+
 on:
-push:
-branches: [ main ]
+  push:
+    branches: [ main ]
+
 jobs:
-make-readme:
-runs-on: ubuntu-latest
-permissions:
-contents: write
-steps:
-- name: Checkout
-uses: actions/checkout@v4
+  readme:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
+      - name: Criar arquivo README
+        run: |
+          echo "# Projeto Automatizado" > README.md
+          echo "Gerado automaticamente pelo GitHub Actions." >> README.md
 
-- name: Gerar README.md se não existir
-run: |
-if [ -f README.md ]; then
-echo "README.md já existe, atualizando data.";
-else
-echo "Criando README.md";
-fi
-echo "# Repositório de exemplo" > README.md
-echo "Gerado por workflow em: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> README.md
-echo "Pushed by: ${{ github.actor }}" >> README.md
-
-
-- name: Commit e push do README
-run: |
-git config user.name "github-actions"
-git config user.email "actions@github.com"
-git add README.md
-git commit -m "chore: add/update README by action" || echo "nothing to commit"
-git push origin HEAD:${{ github.ref_name }} || echo "push failed"
-env:
-GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Fazer commit e push do README
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add README.md
+          git commit -m "Criado README automático" || echo "Nada para commitar"
+          git push

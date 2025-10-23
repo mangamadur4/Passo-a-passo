@@ -1,26 +1,27 @@
-name: Multi-steps - arquivos sem sequência (contagem global)
+name: Info completa (sem sequência)
+
 on:
-push:
-branches: [ main ]
+  push:
+    branches: [ main ]
+
 jobs:
-report:
-runs-on: ubuntu-latest
-steps:
-- name: Checkout
-uses: actions/checkout@v4
-
-
-- name: Data e usuário
-run: |
-echo "Date: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
-echo "User: ${{ github.actor }}"
-
-
-- name: Contar quantos .html .css .js existem no repo agora
-run: |
-html_count=$(find . -type f -name '*.html' | wc -l)
-css_count=$(find . -type f -name '*.css' | wc -l)
-js_count=$(find . -type f -name '*.js' | wc -l)
-echo "HTML total no repo: $html_count"
-echo "CSS total no repo: $css_count"
-echo "JS total no repo: $js_count"
+  info:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        tipo: [data, usuario, html, css, js]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Exibir informação
+        run: |
+          if [ "${{ matrix.tipo }}" = "data" ]; then
+            date
+          elif [ "${{ matrix.tipo }}" = "usuario" ]; then
+            echo "Usuário: ${{ github.actor }}"
+          elif [ "${{ matrix.tipo }}" = "html" ]; then
+            echo "HTML: $(find . -type f -name '*.html' | wc -l)"
+          elif [ "${{ matrix.tipo }}" = "css" ]; then
+            echo "CSS: $(find . -type f -name '*.css' | wc -l)"
+          else
+            echo "JS: $(find . -type f -name '*.js' | wc -l)"
+          fi

@@ -1,0 +1,15 @@
+name: Contar arquivos HTML
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  contar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Contar arquivos HTML
+        run: |
+          total=$(find . -type f -name "*.html" | wc -l)
+          echo "Quantidade de arquivos HTML: $total"

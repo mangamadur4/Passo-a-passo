@@ -1,36 +1,21 @@
-name: Multi-steps - arquivos enviados em sequência
+name: Info completa com sequência
+
 on:
-push:
-branches: [ main ]
+  push:
+    branches: [ main ]
+
 jobs:
-sequence-report:
-runs-on: ubuntu-latest
-steps:
-- name: Checkout
-uses: actions/checkout@v4
-
-
-- name: Data e usuário
-run: |
-echo "Date: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
-echo "User: ${{ github.actor }}"
-
-
-- name: Obter lista de arquivos modificados no push (em ordem)
-id: files
-run: |
-git fetch --no-tags --prune --depth=1 origin ${{ github.ref_name }} || true
-git show --pretty="" --name-only ${{ github.sha }} > modified.txt || true
-echo "Files in push (sequence):"
-cat modified.txt
-echo "::set-output name=list::$(sed ':a;N;$!ba;s/\n/,/g' modified.txt)"
-
-
-- name: Contar quantos .html .css .js foram enviados (mantendo a ordem encontrada)
-run: |
-html_count=$(grep -cE '\.html$' modified.txt || true)
-css_count=$(grep -cE '\.css$' modified.txt || true)
-js_count=$(grep -cE '\.js$' modified.txt || true)
-echo "HTML em sequência: $html_count"
-echo "CSS em sequência: $css_count"
-echo "JS em sequência: $js_count"
+  info:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Data e hora
+        run: date
+      - name: Usuário
+        run: echo "Usuário: ${{ github.actor }}"
+      - name: Contagem de arquivos HTML
+        run: echo "HTML: $(find . -type f -name '*.html' | wc -l)"
+      - name: Contagem de arquivos CSS
+        run: echo "CSS: $(find . -type f -name '*.css' | wc -l)"
+      - name: Contagem de arquivos JS
+        run: echo "JS: $(find . -type f -name '*.js' | wc -l)"
